@@ -11,7 +11,7 @@ export function HeroSection() {
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0"
-        src="/video.webm"
+        src="/video.mov"
       />
       {/* Overlay léger pour la lisibilité du texte */}
       <div className="pointer-events-none absolute inset-0 bg-black/30 z-10" />
