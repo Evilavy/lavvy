@@ -1,47 +1,89 @@
-import CardNav from "@/components/CardNav";
+"use client";
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  NavbarButton,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from "@/components/ui/resizable-navbar";
+import { useState } from "react";
 
-const items = [
-  {
-    label: "Services",
-    bgColor: "#1B1722",
-    textColor: "#fff",
-    links: [
-      { label: "Par secteur", ariaLabel: "Services par secteur", href: "#" },
-      { label: "Par CMS", ariaLabel: "Services par CMS", href: "#" },
-    ],
-  },
-  {
-    label: "Studio",
-    bgColor: "#2F293A",
-    textColor: "#fff",
-    links: [
-      { label: "À propos", ariaLabel: "À propos de nous", href: "#" },
-      { label: "Processus", ariaLabel: "Notre processus", href: "#" },
-    ],
-  },
-  {
-    label: "Contact",
-    bgColor: "#2F293A",
-    textColor: "#fff",
-    links: [
-      { label: "Études de cas", ariaLabel: "Études de cas", href: "#" },
-      { label: "Plan d'action", ariaLabel: "Obtenir un plan d'action", href: "#" },
-    ],
-  },
-];
+export function NavbarDemo() {
+  const navItems = [
+    {
+      name: "Features",
+      link: "#features",
+    },
+    {
+      name: "Pricing",
+      link: "#pricing",
+    },
+    {
+      name: "Contact",
+      link: "#contact",
+    },
+  ];
 
-export function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <CardNav
-      logo="/logo.svg"
-      logoAlt="Studio Lavvy"
-      items={items}
-      baseColor="#fff"
-      menuColor="#000"
-      buttonBgColor="#0967c2"
-      buttonTextColor="#fff"
-      buttonLabel="Audit gratuit"
-      ease="power3.out"
-    />
+      <Navbar>
+        {/* Desktop Navigation */}
+        <NavBody>
+          <NavbarLogo />
+          <NavItems items={navItems} />
+          <div className="flex items-center gap-4">
+            <NavbarButton variant="secondary">Login</NavbarButton>
+            <NavbarButton variant="primary">Book a call</NavbarButton>
+          </div>
+        </NavBody>
+
+        {/* Mobile Navigation */}
+        <MobileNav>
+          <MobileNavHeader>
+            <NavbarLogo />
+            <MobileNavToggle
+              isOpen={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
+          </MobileNavHeader>
+
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
+            {navItems.map((item, idx) => (
+              <a
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="relative text-neutral-600 dark:text-neutral-300"
+              >
+                <span className="block">{item.name}</span>
+              </a>
+            ))}
+            <div className="flex w-full flex-col gap-4">
+              <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                variant="primary"
+                className="w-full"
+              >
+                Login
+              </NavbarButton>
+              <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                variant="primary"
+                className="w-full"
+              >
+                Book a call
+              </NavbarButton>
+            </div>
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
   );
 }
