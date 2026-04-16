@@ -61,7 +61,7 @@ export function HeroSection() {
           <div className="relative">
             <div className="h-14 w-14 rounded-lg overflow-hidden border-2 border-[#0967c2]">
               <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+                src="https://i.scdn.co/image/ab67616100005174df3a8706ed65e617d97f62a4"
                 alt="Team member"
                 className="h-full w-full object-cover"
               />
