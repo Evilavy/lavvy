@@ -1,36 +1,47 @@
-import { ChevronDown } from "lucide-react";
+import CardNav from "@/components/CardNav";
+
+const items = [
+  {
+    label: "Services",
+    bgColor: "#1B1722",
+    textColor: "#fff",
+    links: [
+      { label: "Par secteur", ariaLabel: "Services par secteur", href: "#" },
+      { label: "Par CMS", ariaLabel: "Services par CMS", href: "#" },
+    ],
+  },
+  {
+    label: "Studio",
+    bgColor: "#2F293A",
+    textColor: "#fff",
+    links: [
+      { label: "À propos", ariaLabel: "À propos de nous", href: "#" },
+      { label: "Processus", ariaLabel: "Notre processus", href: "#" },
+    ],
+  },
+  {
+    label: "Contact",
+    bgColor: "#2F293A",
+    textColor: "#fff",
+    links: [
+      { label: "Études de cas", ariaLabel: "Études de cas", href: "#" },
+      { label: "Plan d'action", ariaLabel: "Obtenir un plan d'action", href: "#" },
+    ],
+  },
+];
 
 export function Navbar() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5">
-      <div className="flex items-center gap-10">
-        <span className="text-3xl font-bold tracking-tight text-[#08559E]">Studio Lavvy</span>
-        <div className="hidden md:flex items-center gap-6">
-          <button className="flex items-center gap-1 text-sm text-brand-foreground hover:text-foreground transition-colors">
-            by Industry <ChevronDown className="w-3.5 h-3.5" />
-          </button>
-          <button className="flex items-center gap-1 text-sm text-brand-foreground hover:text-foreground transition-colors">
-            by CMS <ChevronDown className="w-3.5 h-3.5" />
-          </button>
-          <a href="#" className="text-sm text-brand-foreground hover:text-foreground transition-colors">About</a>
-          <a href="#" className="text-sm text-brand-foreground hover:text-foreground transition-colors">Process</a>
-        </div>
-      </div>
-      <div className="hidden md:flex items-center gap-3">
-        <a href="#" className="text-sm text-brand-foreground hover:text-foreground transition-colors">Case Studies</a>
-        <a
-          href="#"
-          className="ml-4 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:opacity-90"
-        >
-          Action Plan
-        </a>
-        <a
-          href="#"
-          className="rounded-lg border border-foreground px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/10"
-        >
-          Contact
-        </a>
-      </div>
-    </nav>
+    <CardNav
+      logo="/logo.svg"
+      logoAlt="Studio Lavvy"
+      items={items}
+      baseColor="#fff"
+      menuColor="#000"
+      buttonBgColor="#0967c2"
+      buttonTextColor="#fff"
+      buttonLabel="Audit gratuit"
+      ease="power3.out"
+    />
   );
 }
