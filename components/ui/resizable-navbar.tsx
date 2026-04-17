@@ -73,7 +73,7 @@ export const Navbar = ({ children, className }: NavbarProps) => {
       <motion.div
         ref={ref}
         // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
-        className={cn("fixed inset-x-0 top-0 z-40 w-full mt-6", className)}
+        className={cn("fixed inset-x-0 top-0 z-40 w-full sm:mt-6", className)}
       >
         {React.Children.map(children, (child) =>
           React.isValidElement(child)
@@ -256,7 +256,7 @@ export const NavbarLogo = () => {
       <img
         src="./logo.png"
         alt="logo"
-        className="bg-white rounded-md w-10 h-10 object-cover"
+        className="bg-zinc-100 rounded-md w-10 h-10 object-cover"
       />
       <span className={cn("font-medium transition-colors duration-200 font-bold", visible ? "text-black dark:text-white" : "text-white")}>Studio Lavvy</span>
     </a>

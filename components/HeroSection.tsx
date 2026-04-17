@@ -44,23 +44,13 @@ export function HeroSection() {
           On conçoit des sites clairs, rapides et efficaces pour les entreprises qui veulent être visibles et convertir en ligne.        </p>
 
         {/* CTA */}
-        <div className="mt-10 flex items-center gap-3">
-          <div className="relative">
+        <div className="mt-10 flex items-end gap-3">
+          <div className="relative flex flex-col items-start">
             <button className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-white px-7 py-4 text-base font-semibold text-brand-dark shadow-lg transition-transform hover:scale-[1.02]">
               <Calendar className="w-5 h-5" />
               Obtenir mon audit gratuit
             </button>
-            <p className="text-xs text-white">Réponse en moins de 24h — sans engagement</p>
-          </div>
-          <div className="relative">
-            <div className="h-14 w-14 rounded-lg overflow-hidden border-2 border-[#0967c2]">
-              <img
-                src="https://i.scdn.co/image/ab67616100005174df3a8706ed65e617d97f62a4"
-                alt="Team member"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <span className="absolute top-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-primary" />
+            <p className="text-xs text-white mt-2">Réponse en moins de 24h — sans engagement</p>
           </div>
         </div>
       </div>

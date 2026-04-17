@@ -219,11 +219,11 @@ export function HeroShader() {
       vertexShader: VERT,
       fragmentShader: FRAG,
       uniforms: {
-        uTex:         { value: texture },
-        uRes:         { value: uRes },
-        uCanvasAspect:{ value: 1.0 },
+        uTex: { value: texture },
+        uRes: { value: uRes },
+        uCanvasAspect: { value: 1.0 },
         uVideoAspect: { value: 16 / 9 },
-        uCell:        { value: 1.5 },
+        uCell: { value: 1.5 },
         uMaskOpacity: { value: 0.45 },
       },
       depthTest: false,
@@ -234,9 +234,9 @@ export function HeroShader() {
 
     // ---- Resize --------------------------------------------------------
     const resize = () => {
-      const dpr  = window.devicePixelRatio || 1;
-      const w    = canvas.clientWidth;
-      const h    = canvas.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
       if (w === 0 || h === 0) return;
 
       renderer.setPixelRatio(dpr);
@@ -249,7 +249,7 @@ export function HeroShader() {
       // Minimum 1.5px pour que le pattern reste perceptible sur grand écran.
       // Sur mobile (< 600 CSS px) on désactive complètement le grain.
       const physW = w * dpr;
-      material.uniforms.uCell.value        = Math.max(1.5, physW / 1800);
+      material.uniforms.uCell.value = Math.max(1.5, physW / 1800);
       material.uniforms.uMaskOpacity.value = w < 600 ? 0 : w < 900 ? 0.2 : 0.45;
     };
     resize();

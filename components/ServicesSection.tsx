@@ -4,27 +4,27 @@ import constructionImage from "@/assets/construction.png";
 
 const services = [
   {
-    title: "Strategy-first Approach",
+    title: "Approche stratégique",
     description:
-      "We don't dive into design blindly. Every project starts with clear positioning, audience insights, and conversion goals so your website is built with purpose.",
+      "On ne plonge pas dans le design les yeux fermés. Chaque projet commence par un positionnement clair, une analyse de votre audience et des objectifs de conversion précis.",
     icon: Lightbulb,
   },
   {
-    title: "Tailored UX/UI Design",
+    title: "Design UX/UI sur-mesure",
     description:
-      "We create intuitive, high-converting interfaces tailored to your users and sales funnel. No templates, just smart, scalable design.",
+      "On crée des interfaces intuitives et performantes, adaptées à vos utilisateurs et à votre tunnel de vente. Pas de templates, juste du design intelligent et évolutif.",
     icon: Smartphone,
   },
   {
-    title: "Future-proof Development",
+    title: "Développement pérenne",
     description:
-      "Built on platforms like WordPress, Webflow, or HubSpot CMS, our sites are fast, flexible, and ready to evolve with your business.",
+      "Conçus sur WordPress, Webflow ou HubSpot CMS, nos sites sont rapides, flexibles et prêts à évoluer avec votre activité.",
     icon: Code,
   },
   {
-    title: "Long-term Support & Growth",
+    title: "Accompagnement & croissance",
     description:
-      "Beyond launch, we stay hands-on with ongoing improvements, performance tracking, SEO, and scalable support plans.",
+      "Après le lancement, on reste présents : améliorations continues, suivi des performances, SEO et plans de support évolutifs.",
     icon: HeadphonesIcon,
   },
 ];

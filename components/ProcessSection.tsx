@@ -5,22 +5,22 @@ import { useRef, useEffect } from "react";
 const steps = [
   {
     num: "01",
-    title: "Discovery Phase",
+    title: "Phase de découverte",
     desc: "On prend le temps de comprendre vos objectifs, vos points de douleur, votre audience et ce qui vous différencie vraiment de la concurrence.",
   },
   {
     num: "02",
-    title: "Project Kickoff",
+    title: "Lancement de projet",
     desc: "On pose les bases : périmètre, jalons, outils et processus. Tout le monde est aligné avant de plonger dans le travail.",
   },
   {
     num: "03",
-    title: "Design & Build",
+    title: "Design & développement",
     desc: "On conçoit des interfaces sur-mesure, pensées pour convertir, puis on développe un site rapide, robuste et évolutif.",
   },
   {
     num: "04",
-    title: "Launch & Support",
+    title: "Lancement & support",
     desc: "On lance et on reste là. Suivi des performances, optimisations continues, SEO et support à long terme pour que votre site grandisse avec vous.",
   },
 ];
@@ -64,10 +64,10 @@ export function ProcessSection() {
             style={{ height: "600px" }}
           >
             <span className="text-xs tracking-[0.2em] uppercase" style={{ color: "#0967c2" }}>
-              (Process)
+              (Processus)
             </span>
             <h2 className="text-[#111] text-[7rem] font-black leading-[0.88] uppercase tracking-tight">
-              How<br />We<br />Work
+              Notre<br />façon<br />de faire
             </h2>
           </div>
 
@@ -79,7 +79,7 @@ export function ProcessSection() {
               style={{ height: "600px", border: "1px solid #0967c2" }}
             >
               <span className="text-xs tracking-[0.2em] uppercase" style={{ color: "#0967c2" }}>
-                Step {i + 1}.
+                Étape {i + 1}.
               </span>
               <div>
                 <h3 className="text-[#111] text-4xl font-bold leading-tight">

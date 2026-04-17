@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #07101d;
+        font-family: "Bricolage Grotesque", sans-serif;
+      }
+
+      /* ─── Scenes ─── */
+      .scene {
+        position: absolute;
+        top: 0; left: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background-color: #07101d;
+      }
+      #scene2, #scene3, #scene4, #scene5 { opacity: 0; }
+
+      /* ─── Scene content: flex column, fills 100%, padding positions content ─── */
+      .sc {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .sc-center     { justify-content: center; align-items: flex-start; padding: 0 160px; }
+      .sc-center-mid { justify-content: center; align-items: center; text-align: center; padding: 0 240px; }
+
+      /* ─── Radial glows (no CSS transform — GSAP handles scale) ─── */
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      /* ══ SCENE 1 ══ */
+      #s1-glow {
+        width: 1000px; height: 1000px;
+        top: 40px; left: 460px;
+        background: radial-gradient(ellipse, rgba(9,103,194,0.2) 0%, rgba(9,103,194,0) 70%);
+      }
+      #s1-corner {
+        position: absolute;
+        width: 300px; height: 300px;
+        top: 60px; right: 140px;
+        background: radial-gradient(ellipse, rgba(53,137,232,0.12) 0%, rgba(53,137,232,0) 70%);
+        border-radius: 50%;
+      }
+      #s1-studio {
+        font-family: "DM Mono", monospace;
+        font-size: 22px;
+        font-weight: 400;
+        letter-spacing: 0.35em;
+        color: #3589e8;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      #s1-lavvy {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 220px;
+        font-weight: 900;
+        line-height: 0.86;
+        letter-spacing: -0.045em;
+        color: #edf2fb;
+        margin-bottom: 36px;
+      }
+      #s1-divider {
+        width: 80px;
+        height: 3px;
+        background: #0967c2;
+        border-radius: 2px;
+        transform-origin: left center;
+        margin-bottom: 28px;
+      }
+      #s1-tagline {
+        font-family: "DM Mono", monospace;
+        font-size: 20px;
+        font-weight: 400;
+        letter-spacing: 0.09em;
+        color: rgba(237,242,251,0.55);
+      }
+
+      /* ══ SCENE 2 ══ */
+      #s2-ghost {
+        position: absolute;
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 400px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        color: rgba(9,103,194,0.05);
+        top: 50%; left: -40px;
+        transform: translateY(-52%);
+        white-space: nowrap;
+        pointer-events: none;
+        user-select: none;
+      }
+      #s2-label {
+        font-family: "DM Mono", monospace;
+        font-size: 18px;
+        letter-spacing: 0.32em;
+        color: #0967c2;
+        text-transform: uppercase;
+        margin-bottom: 52px;
+      }
+      #s2-line1 {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 108px;
+        font-weight: 900;
+        line-height: 0.92;
+        letter-spacing: -0.03em;
+        color: #edf2fb;
+      }
+      #s2-line2 {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 108px;
+        font-weight: 900;
+        line-height: 0.92;
+        letter-spacing: -0.03em;
+        color: rgba(237,242,251,0.40);
+        margin-bottom: 60px;
+      }
+      #s2-aside {
+        font-family: "DM Mono", monospace;
+        font-size: 22px;
+        color: rgba(237,242,251,0.5);
+        letter-spacing: 0.02em;
+      }
+
+      /* ══ SCENE 3 ══ */
+      #s3-glow {
+        width: 1200px; height: 800px;
+        top: 140px; left: 360px;
+        background: radial-gradient(ellipse, rgba(9,103,194,0.18) 0%, rgba(9,103,194,0) 65%);
+      }
+      #s3-pre {
+        font-family: "DM Mono", monospace;
+        font-size: 18px;
+        letter-spacing: 0.32em;
+        color: #3589e8;
+        text-transform: uppercase;
+        margin-bottom: 42px;
+      }
+      #s3-line1, #s3-line2 {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 84px;
+        font-weight: 900;
+        line-height: 1.0;
+        letter-spacing: -0.02em;
+        color: rgba(237,242,251,0.55);
+      }
+      #s3-hero {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 112px;
+        font-weight: 900;
+        line-height: 1.0;
+        letter-spacing: -0.03em;
+        color: #edf2fb;
+        margin-top: 6px;
+        margin-bottom: 52px;
+      }
+      #s3-hero em {
+        font-style: normal;
+        color: #3589e8;
+      }
+      #s3-rule {
+        width: 60px;
+        height: 2px;
+        background: #0967c2;
+        border-radius: 1px;
+        transform-origin: left center;
+        margin-bottom: 24px;
+      }
+      #s3-services {
+        font-family: "DM Mono", monospace;
+        font-size: 20px;
+        letter-spacing: 0.14em;
+        color: rgba(237,242,251,0.48);
+      }
+
+      /* ══ SCENE 4 ══ */
+      #s4-glow {
+        width: 800px; height: 600px;
+        top: 340px; right: 0;
+        background: radial-gradient(ellipse, rgba(9,103,194,0.15) 0%, rgba(9,103,194,0) 65%);
+      }
+      #s4-label {
+        font-family: "DM Mono", monospace;
+        font-size: 18px;
+        letter-spacing: 0.32em;
+        color: #0967c2;
+        text-transform: uppercase;
+        margin-bottom: 56px;
+      }
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 72px;
+      }
+      .pill {
+        font-family: "DM Mono", monospace;
+        font-size: 26px;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        color: #edf2fb;
+        border: 1.5px solid rgba(9,103,194,0.6);
+        border-radius: 100px;
+        padding: 18px 40px;
+        background: rgba(9,103,194,0.10);
+      }
+      #s4-stat {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 58px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        color: #edf2fb;
+      }
+      #s4-stat em {
+        font-style: normal;
+        color: #3589e8;
+      }
+      #s4-stat-sub {
+        font-family: "DM Mono", monospace;
+        font-size: 20px;
+        letter-spacing: 0.09em;
+        color: rgba(237,242,251,0.48);
+        margin-top: 14px;
+      }
+
+      /* ══ SCENE 5 ══ */
+      #s5-glow {
+        width: 1300px; height: 900px;
+        top: 90px; left: 310px;
+        background: radial-gradient(ellipse, rgba(9,103,194,0.24) 0%, rgba(9,103,194,0) 65%);
+      }
+      #s5-eyebrow {
+        font-family: "DM Mono", monospace;
+        font-size: 18px;
+        letter-spacing: 0.32em;
+        color: #3589e8;
+        text-transform: uppercase;
+        margin-bottom: 40px;
+      }
+      #s5-headline {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 160px;
+        font-weight: 900;
+        line-height: 0.88;
+        letter-spacing: -0.045em;
+        color: #edf2fb;
+        margin-bottom: 36px;
+      }
+      #s5-sub {
+        font-family: "DM Mono", monospace;
+        font-size: 28px;
+        letter-spacing: 0.06em;
+        color: rgba(237,242,251,0.52);
+        margin-bottom: 60px;
+      }
+      #s5-url {
+        font-family: "DM Mono", monospace;
+        font-size: 22px;
+        letter-spacing: 0.28em;
+        color: #0967c2;
+        border-bottom: 1px solid rgba(9,103,194,0.4);
+        padding-bottom: 8px;
+        align-self: center;
+      }
+      #s5-blackout {
+        position: absolute;
+        top: 0; left: 0;
+        width: 1920px; height: 1080px;
+        background: #000814;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="26"
+      data-width="1920"
+      data-height="1080"
+    >
+
+      <!-- ══════════════════════════════════════════════════════ -->
+      <!-- SCENE 1 — Wordmark intro  (0s → 4.5s)                 -->
+      <!-- ══════════════════════════════════════════════════════ -->
+      <div id="scene1" class="scene">
+        <div id="s1-glow"   class="glow"></div>
+        <div id="s1-corner" class="glow"></div>
+        <div class="sc sc-center">
+          <span id="s1-studio">Studio</span>
+          <h1   id="s1-lavvy">LAVVY</h1>
+          <div  id="s1-divider"></div>
+          <p    id="s1-tagline">Agence digitale — Paris</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════ -->
+      <!-- SCENE 2 — Problème  (4.0s → 9.5s)                     -->
+      <!-- ══════════════════════════════════════════════════════ -->
+      <div id="scene2" class="scene">
+        <div id="s2-ghost">PROBLÈME</div>
+        <div class="sc sc-center">
+          <p    id="s2-label">Le constat</p>
+          <h2   id="s2-line1">Votre site web</h2>
+          <h2   id="s2-line2">ne convertit pas.</h2>
+          <p    id="s2-aside">Vous n'êtes pas seul — et c'est réparable.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════ -->
+      <!-- SCENE 3 — Solution  (9.0s → 16.5s)                    -->
+      <!-- ══════════════════════════════════════════════════════ -->
+      <div id="scene3" class="scene">
+        <div id="s3-glow" class="glow"></div>
+        <div class="sc sc-center">
+          <p   id="s3-pre">La solution</p>
+          <p   id="s3-line1">La brique manquante</p>
+          <p   id="s3-line2">de votre activité :</p>
+          <h2  id="s3-hero">Un site web qui <em>convertit.</em></h2>
+          <div id="s3-rule"></div>
+          <p   id="s3-services">Strategy · UX/UI · Développement · SEO</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════ -->
+      <!-- SCENE 4 — Services & Proof  (16.0s → 22.5s)           -->
+      <!-- ══════════════════════════════════════════════════════ -->
+      <div id="scene4" class="scene">
+        <div id="s4-glow" class="glow"></div>
+        <div class="sc sc-center">
+          <p id="s4-label">Ce qu'on fait</p>
+          <div class="pills">
+            <div id="s4-p1" class="pill">Strategy</div>
+            <div id="s4-p2" class="pill">UX/UI Design</div>
+            <div id="s4-p3" class="pill">Development</div>
+            <div id="s4-p4" class="pill">SEO &amp; Support</div>
+          </div>
+          <p id="s4-stat">Réponse en <em>moins de 24h</em></p>
+          <p id="s4-stat-sub">Sans engagement · Audit offert</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════ -->
+      <!-- SCENE 5 — CTA Outro  (22.0s → 26.0s)                  -->
+      <!-- ══════════════════════════════════════════════════════ -->
+      <div id="scene5" class="scene">
+        <div id="s5-glow" class="glow"></div>
+        <div class="sc sc-center-mid">
+          <p   id="s5-eyebrow">Commençons</p>
+          <h2  id="s5-headline">Audit gratuit.</h2>
+          <p   id="s5-sub">Sans engagement. Réponse en 24h.</p>
+          <p   id="s5-url">lavvy.fr</p>
+        </div>
+        <div id="s5-blackout"></div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ─────────────────────────────────────────────────────────────
+      // SCENE 1: Wordmark intro  (0s – visible until t=4.5s)
+      // Blur-crossfade transition to Scene 2 at t=4.0s, dur=0.6s
+      // ─────────────────────────────────────────────────────────────
+
+      // Glow breathe: two half-cycles over 4s (finite, not infinite)
+      tl.to("#s1-glow", { scale: 1.10, duration: 2.0, ease: "sine.inOut" }, 0.0);
+      tl.to("#s1-glow", { scale: 1.00, duration: 2.0, ease: "sine.inOut" }, 2.0);
+
+      // Entrance animations
+      tl.from("#s1-studio",  { y: -24, opacity: 0, duration: 0.5, ease: "power2.out"  }, 0.2);
+      tl.from("#s1-lavvy",   { x: -90, opacity: 0, duration: 0.7, ease: "power4.out"  }, 0.5);
+      tl.from("#s1-divider", { scaleX: 0, opacity: 0, duration: 0.45, ease: "expo.out" }, 1.25);
+      tl.from("#s1-tagline", { y: 16,  opacity: 0, duration: 0.6, ease: "sine.out"   }, 1.55);
+
+      // Transition → Scene 2 (blur crossfade)
+      tl.to("#scene1", { filter: "blur(22px)", opacity: 0, duration: 0.6, ease: "sine.inOut" }, 4.0);
+      tl.fromTo("#scene2",
+        { filter: "blur(22px)", opacity: 0 },
+        { filter: "blur(0px)",  opacity: 1, duration: 0.6, ease: "sine.inOut" }, 4.0);
+
+      // ─────────────────────────────────────────────────────────────
+      // SCENE 2: Problème  (4.0s – visible until t=9.5s)
+      // Blur-crossfade transition to Scene 3 at t=9.0s, dur=0.6s
+      // ─────────────────────────────────────────────────────────────
+
+      // Ghost text slow drift (starts at scene reveal, moves left over ~10s)
+      tl.from("#s2-ghost", { x: 80, duration: 10.0, ease: "none" }, 4.0);
+
+      // Entrance animations
+      tl.from("#s2-label", { y: 12,  opacity: 0, duration: 0.4, ease: "sine.out"   }, 4.7);
+      tl.from("#s2-line1", { x: -65, opacity: 0, duration: 0.65, ease: "power3.out" }, 5.1);
+      tl.from("#s2-line2", { x:  65, opacity: 0, duration: 0.70, ease: "power3.out" }, 5.5);
+      tl.from("#s2-aside", { opacity: 0, duration: 0.55, ease: "sine.out" }, 6.3);
+
+      // Transition → Scene 3 (blur crossfade)
+      tl.to("#scene2", { filter: "blur(22px)", opacity: 0, duration: 0.6, ease: "sine.inOut" }, 9.0);
+      tl.fromTo("#scene3",
+        { filter: "blur(22px)", opacity: 0 },
+        { filter: "blur(0px)",  opacity: 1, duration: 0.6, ease: "sine.inOut" }, 9.0);
+
+      // ─────────────────────────────────────────────────────────────
+      // SCENE 3: Solution  (9.0s – visible until t=16.5s)
+      // Zoom-through transition to Scene 4 at t=16.0s, dur=0.6s
+      // ─────────────────────────────────────────────────────────────
+
+      // Glow breathe: two cycles over 7s
+      tl.to("#s3-glow", { scale: 1.12, duration: 1.75, ease: "sine.inOut" }, 9.5);
+      tl.to("#s3-glow", { scale: 1.00, duration: 1.75, ease: "sine.inOut" }, 11.25);
+      tl.to("#s3-glow", { scale: 1.10, duration: 1.75, ease: "sine.inOut" }, 13.0);
+      tl.to("#s3-glow", { scale: 1.00, duration: 1.75, ease: "sine.inOut" }, 14.75);
+
+      // Entrance animations
+      tl.from("#s3-pre",      { y: 22, opacity: 0, duration: 0.4, ease: "sine.out"   }, 9.4);
+      tl.from("#s3-line1",    { y: 55, opacity: 0, duration: 0.8, ease: "expo.out"   }, 9.8);
+      tl.from("#s3-line2",    { y: 44, opacity: 0, duration: 0.7, ease: "expo.out"   }, 10.3);
+      tl.from("#s3-hero",     { scale: 0.94, opacity: 0, duration: 0.9, ease: "power4.out" }, 10.9);
+      tl.from("#s3-rule",     { scaleX: 0, opacity: 0, duration: 0.5, ease: "expo.out"    }, 12.1);
+      tl.from("#s3-services", { y: 22, opacity: 0, duration: 0.5, ease: "sine.out"        }, 12.5);
+
+      // Transition → Scene 4 (zoom through)
+      tl.to("#scene3",  { scale: 1.13, opacity: 0, duration: 0.6, ease: "power3.in"  }, 16.0);
+      tl.set("#scene3", { visibility: "hidden" }, 16.6);
+      tl.fromTo("#scene4",
+        { scale: 0.94, opacity: 0 },
+        { scale: 1.00, opacity: 1, duration: 0.6, ease: "power3.out" }, 16.0);
+
+      // ─────────────────────────────────────────────────────────────
+      // SCENE 4: Services & Proof  (16.0s – visible until t=22.5s)
+      // Blur-crossfade transition to Scene 5 at t=22.0s, dur=0.6s
+      // ─────────────────────────────────────────────────────────────
+
+      // Glow breathe
+      tl.to("#s4-glow", { scale: 1.18, duration: 3.0, ease: "sine.inOut" }, 16.5);
+      tl.to("#s4-glow", { scale: 1.00, duration: 2.8, ease: "sine.inOut" }, 19.5);
+
+      // Entrance animations
+      tl.from("#s4-label",    { opacity: 0, y: 16, duration: 0.4, ease: "sine.out"   }, 16.6);
+      tl.from("#s4-p1",       { x: -44,    opacity: 0, duration: 0.40, ease: "power3.out" }, 17.0);
+      tl.from("#s4-p2",       { x: -44,    opacity: 0, duration: 0.40, ease: "power3.out" }, 17.3);
+      tl.from("#s4-p3",       { x: -44,    opacity: 0, duration: 0.40, ease: "power3.out" }, 17.6);
+      tl.from("#s4-p4",       { x: -44,    opacity: 0, duration: 0.40, ease: "power3.out" }, 17.9);
+      tl.from("#s4-stat",     { y: 28,     opacity: 0, duration: 0.6,  ease: "power2.out" }, 18.6);
+      tl.from("#s4-stat-sub", { y: 16,     opacity: 0, duration: 0.5,  ease: "sine.out"   }, 19.0);
+
+      // Transition → Scene 5 (blur crossfade)
+      tl.to("#scene4",  { filter: "blur(22px)", opacity: 0, duration: 0.6, ease: "sine.inOut" }, 22.0);
+      tl.set("#scene4", { visibility: "hidden" }, 22.6);
+      tl.fromTo("#scene5",
+        { filter: "blur(22px)", opacity: 0 },
+        { filter: "blur(0px)",  opacity: 1, duration: 0.6, ease: "sine.inOut" }, 22.0);
+
+      // ─────────────────────────────────────────────────────────────
+      // SCENE 5: CTA Outro  (22.0s – 26.0s)
+      // Fade to black at t=25.0s — FINAL SCENE (exit allowed)
+      // ─────────────────────────────────────────────────────────────
+
+      // Glow pulse
+      tl.to("#s5-glow", { scale: 1.10, duration: 2.0, ease: "sine.inOut" }, 22.5);
+      tl.to("#s5-glow", { scale: 1.00, duration: 1.5, ease: "sine.inOut" }, 24.5);
+
+      // Entrance animations
+      tl.from("#s5-eyebrow",  { y: 22,  opacity: 0, duration: 0.45, ease: "sine.out"   }, 22.4);
+      tl.from("#s5-headline", { y: 65,  opacity: 0, duration: 0.85, ease: "power4.out" }, 22.7);
+      tl.from("#s5-sub",      { y: 22,  opacity: 0, duration: 0.6,  ease: "sine.out"   }, 23.25);
+      tl.from("#s5-url",      { letterSpacing: "0.5em", opacity: 0, duration: 0.75, ease: "power2.out" }, 23.7);
+
+      // Final fade to black (ONLY exit animation in the whole composition)
+      tl.to("#s5-blackout", { opacity: 1, duration: 1.0, ease: "power2.in" }, 25.0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
