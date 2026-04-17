@@ -45,14 +45,10 @@ const FRAG = /* glsl */ `
   // 0.0 = noirs purs  |  0.05 = imperceptible mais réaliste  |  0.2 = visible
   const float SHADOW_LIFT  = 0.04;
 
-  // Taille d'UNE cellule phosphor en pixels physiques (R = 1 cellule, G = 1, B = 1).
-  // PETIT = grain fin (recommandé)  |  GRAND = bandes colorées visibles.
-  // 1.5 = quasi-invisible  |  2.0 = très subtil  |  4.0+ = bandes visibles
-  const float CELL         = 1.5;
-
-  // Mélange entre image nette et image avec grain CRT.
-  // 0.0 = image propre sans aucun grain  |  0.4 = grain subtil  |  1.0 = full CRT
-  const float MASK_OPACITY = 0.45;
+  // Taille d'une cellule phosphor et opacité du grain — passées en uniforms
+  // pour pouvoir les ajuster dynamiquement selon la taille de l'écran.
+  uniform float uCell;        // calculé en JS : physicalWidth / ~600 triads
+  uniform float uMaskOpacity; // 0 sur mobile, 0.45 sur desktop
 
   // Seuil luma pour le bloom — pixels EN DESSOUS ne blooment PAS.
   // 0.6 = seulement les reflets très clairs  |  0.3 = zones claires  |  0.0 = tout (banding!)
@@ -91,21 +87,19 @@ const FRAG = /* glsl */ `
   }
 
   // Slot-mask : bandes phosphor R/G/B horizontales, rangées alternées.
-  // Pas de composant vertical — il créait des scanlines horizontales visibles.
   vec3 slotMask(vec2 pix, vec3 col) {
-    float row  = floor(pix.y / CELL);
-    float xOff = mod(row, 2.0) > 0.5 ? CELL * 0.5 : 0.0;
+    float row  = floor(pix.y / uCell);
+    float xOff = mod(row, 2.0) > 0.5 ? uCell * 0.5 : 0.0;
 
-    float tx  = mod(pix.x + xOff, CELL * 3.0);
-    float chan = floor(tx / CELL);  // 0=R  1=G  2=B
+    float tx  = mod(pix.x + xOff, uCell * 3.0);
+    float chan = floor(tx / uCell);  // 0=R  1=G  2=B
     vec3  sel  = vec3(
       step(chan, 0.5),
       step(0.5, chan) * step(chan, 1.5),
       step(1.5, chan)
     );
 
-    // Fondu horizontal uniquement (pas de composant vertical = pas de scanlines)
-    float lx = fract(tx / CELL);
+    float lx = fract(tx / uCell);
     float h  = smoothstep(0.0, 0.2, lx) * (1.0 - smoothstep(0.8, 1.0, lx));
 
     return col * sel * 2.8 * h;
@@ -158,8 +152,8 @@ const FRAG = /* glsl */ `
     // 1. Exposition + grade
     vec3 col = grade(raw * EXPOSURE);
 
-    // 2. Slot-mask (mixé pour préserver la netteté de l'image si MASK_OPACITY faible)
-    col = mix(col, slotMask(distUv * uRes, col), MASK_OPACITY);
+    // 2. Slot-mask (mixé pour préserver la netteté de l'image si uMaskOpacity faible)
+    col = mix(col, slotMask(distUv * uRes, col), uMaskOpacity);
 
     // 3. Bloom additif interne
     col += bloom(videoUv, texel) * BLOOM_INT;
@@ -225,10 +219,12 @@ export function HeroShader() {
       vertexShader: VERT,
       fragmentShader: FRAG,
       uniforms: {
-        uTex: { value: texture },
-        uRes: { value: uRes },
-        uCanvasAspect: { value: 1.0 },
-        uVideoAspect: { value: 16 / 9 }, // défaut 16:9, mis à jour au loadedmetadata
+        uTex:         { value: texture },
+        uRes:         { value: uRes },
+        uCanvasAspect:{ value: 1.0 },
+        uVideoAspect: { value: 16 / 9 },
+        uCell:        { value: 1.5 },
+        uMaskOpacity: { value: 0.45 },
       },
       depthTest: false,
       depthWrite: false,
@@ -238,13 +234,23 @@ export function HeroShader() {
 
     // ---- Resize --------------------------------------------------------
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
+      const dpr  = window.devicePixelRatio || 1;
+      const w    = canvas.clientWidth;
+      const h    = canvas.clientHeight;
+      if (w === 0 || h === 0) return;
+
       renderer.setPixelRatio(dpr);
       renderer.setSize(w, h, false);
       uRes.set(w * dpr, h * dpr);
-      material.uniforms.uCanvasAspect.value = w / Math.max(h, 1);
+      material.uniforms.uCanvasAspect.value = w / h;
+
+      // Slot-mask : adapter la taille des cellules à la résolution physique.
+      // On vise ~600 triads sur la largeur → cellule = physicalWidth / 1800.
+      // Minimum 1.5px pour que le pattern reste perceptible sur grand écran.
+      // Sur mobile (< 600 CSS px) on désactive complètement le grain.
+      const physW = w * dpr;
+      material.uniforms.uCell.value        = Math.max(1.5, physW / 1800);
+      material.uniforms.uMaskOpacity.value = w < 600 ? 0 : w < 900 ? 0.2 : 0.45;
     };
     resize();
     const ro = new ResizeObserver(resize);
