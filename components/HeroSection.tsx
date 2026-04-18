@@ -1,19 +1,44 @@
 "use client";
 import { Calendar } from "lucide-react";
 import { HeroShader } from "@/components/HeroShader";
-
 export function HeroSection() {
+  const tags = ["Strategy", "UX/UI Design", "Development", "SEO & Support"];
+
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
-      {/* Shader background */}
-      <div className="absolute inset-0 z-0">
+    <section className="relative min-h-screen flex flex-col items-center overflow-hidden bg-black">
+      {/* Mobile background image */}
+      <div
+        className="absolute inset-0 z-0 block lg:hidden"
+        style={{
+          backgroundImage: "url('/mobile.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center calc(50% - 50px)",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+
+      {/* Desktop shader background */}
+      <div className="absolute inset-0 z-0 hidden lg:block">
         <HeroShader />
       </div>
 
-      <div className="relative z-20 flex flex-col items-center text-center px-4 pt-28 pb-16 pointer-events-none">
-        {/* Service tags */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {["Strategy", "UX/UI Design", "Development", "SEO & Support"].map((tag) => (
+      {/* Tags — mobile only, collés en haut */}
+      <div className="relative z-20 flex lg:hidden flex-wrap justify-center gap-3 px-4 pt-28 pointer-events-none">
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="rounded-full border border-white/40 px-5 py-2 text-sm text-white bg-white/10 backdrop-blur-sm"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* Main content — centré desktop, poussé en bas mobile */}
+      <div className="relative z-20 flex flex-col items-center text-center px-4 pb-16 mt-auto lg:mt-0 lg:py-28 pointer-events-none">
+        {/* Tags — desktop only */}
+        <div className="hidden lg:flex flex-wrap justify-center gap-3 mb-12">
+          {tags.map((tag) => (
             <span
               key={tag}
               className="rounded-full border border-white/40 px-5 py-2 text-sm text-white bg-white/10 backdrop-blur-sm"
@@ -23,25 +48,26 @@ export function HeroSection() {
           ))}
         </div>
 
-        {/* Headline — Apple Liquid Glass text */}
+        {/* Headline */}
         <h1
-          className="max-w-5xl text-5xl md:text-7xl lg:text-[4rem] font-bold leading-[1.05] tracking-tight"
+          className="max-w-5xl text-3xl md:text-5xl lg:text-[4rem] font-bold leading-[1.05] tracking-tight"
           style={{
             background:
-              "linear-gradient(160deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.55) 35%, rgba(200,225,255,0.85) 60%, rgba(255,255,255,0.95) 80%, rgba(255,255,255,0.5) 100%)",
+              "linear-gradient(160deg, #ffffff 0%, #ddeeff 40%, #c8e1ff 60%, #ffffff 80%, #dceeff 100%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",
             filter:
-              "drop-shadow(0 1px 0 rgba(255,255,255,0.6)) drop-shadow(0 2px 12px rgba(180,210,255,0.35)) drop-shadow(0 4px 24px rgba(0,0,0,0.25))",
+              "drop-shadow(0 0 14px rgba(0,0,0,0.75)) drop-shadow(0 0 36px rgba(0,0,0,0.55))",
           }}
         >
           La brique manquante de votre activité : un site web qui convertit.
         </h1>
 
         {/* Subheadline */}
-        <p className="mt-8 max-w-xl text-base leading-relaxed text-white/80">
-          On conçoit des sites clairs, rapides et efficaces pour les entreprises qui veulent être visibles et convertir en ligne.        </p>
+        <p className="mt-16 max-w-xl text-base leading-relaxed text-white">
+          On conçoit des sites clairs, rapides et efficaces pour les entreprises qui veulent être visibles et convertir en ligne.
+        </p>
 
         {/* CTA */}
         <div className="mt-10 flex items-end gap-3">

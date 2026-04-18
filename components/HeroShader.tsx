@@ -189,7 +189,7 @@ export function HeroShader() {
 
     // ---- Video element with manual loop --------------------------------
     const video = document.createElement("video") as VideoWithRVFC;
-    video.src = "/longer420.webm";
+    video.src = "/max.webm";
     video.muted = true;
     video.playsInline = true;
     video.preload = "auto";
@@ -223,8 +223,8 @@ export function HeroShader() {
         uRes: { value: uRes },
         uCanvasAspect: { value: 1.0 },
         uVideoAspect: { value: 16 / 9 },
-        uCell: { value: 1.5 },
-        uMaskOpacity: { value: 0.45 },
+        uCell: { value: 2.5 },
+        uMaskOpacity: { value: 0.0 },
       },
       depthTest: false,
       depthWrite: false,
@@ -249,8 +249,8 @@ export function HeroShader() {
       // Minimum 1.5px pour que le pattern reste perceptible sur grand écran.
       // Sur mobile (< 600 CSS px) on désactive complètement le grain.
       const physW = w * dpr;
-      material.uniforms.uCell.value = Math.max(1.5, physW / 1800);
-      material.uniforms.uMaskOpacity.value = w < 600 ? 0 : w < 900 ? 0.2 : 0.45;
+      material.uniforms.uCell.value = Math.max(2.5, physW / 1200);
+      material.uniforms.uMaskOpacity.value = 0.0;
     };
     resize();
     const ro = new ResizeObserver(resize);
@@ -271,44 +271,25 @@ export function HeroShader() {
     // root cause of the visible jump.
     let rvfcHandle = 0;
 
-    const onVideoFrame: VideoFrameCallback = (_now, metadata) => {
-      // Mark texture dirty only on a verified, display-ready frame
+    const onVideoFrame: VideoFrameCallback = () => {
       texture.needsUpdate = true;
-
-      // Manual loop: if we're within 2 frames of the end, seek to 0.
-      // We avoid video.loop=true which triggers browser pre-buffering.
-      if (video.duration > 0 && metadata.mediaTime >= video.duration - 0.1) {
-        video.currentTime = 0;
-        // Don't re-register here; the seeked listener will re-register
-        return;
+      // Re-register only while video is still playing; stops automatically at the last frame
+      if (!video.ended) {
+        rvfcHandle = video.requestVideoFrameCallback(onVideoFrame);
       }
-
-      rvfcHandle = video.requestVideoFrameCallback(onVideoFrame);
     };
 
     // Fallback for browsers without requestVideoFrameCallback (Firefox, Safari <17)
     const useFallback = typeof video.requestVideoFrameCallback !== "function";
-    let fallbackLoopGuard = false;
 
     const onTimeUpdate = () => {
       texture.needsUpdate = true;
-      if (!fallbackLoopGuard && video.duration > 0 && video.currentTime >= video.duration - 0.1) {
-        fallbackLoopGuard = true;
-        video.currentTime = 0;
-        video.play().finally(() => { fallbackLoopGuard = false; });
-      }
+      // No looping — just let the video stop at the last frame
     };
 
     if (useFallback) {
       video.addEventListener("timeupdate", onTimeUpdate);
     }
-
-    // After a manual seek completes, resume frame callbacks
-    video.addEventListener("seeked", () => {
-      if (!useFallback && video.duration > 0) {
-        rvfcHandle = video.requestVideoFrameCallback(onVideoFrame);
-      }
-    });
 
     video.addEventListener("loadedmetadata", () => {
       // Mettre à jour le ratio réel de la vidéo
