@@ -21,8 +21,9 @@ const FRAG = /* glsl */ `
 
   uniform sampler2D uTex;
   uniform vec2      uRes;         // taille du canvas en pixels physiques (après DPR)
-  uniform float     uCanvasAspect; // ratio W/H du canvas (mis à jour au resize)
-  uniform float     uVideoAspect;  // ratio W/H de la vidéo source
+  uniform float     uCanvasAspect;  // ratio W/H du canvas (mis à jour au resize)
+  uniform float     uVideoAspect;   // ratio W/H de la vidéo source
+  uniform float     uVideoOffsetY;  // décalage vertical (-0.5 = haut, +0.5 = bas)
   varying vec2      vUv;
 
   // ======================================================================
@@ -81,9 +82,9 @@ const FRAG = /* glsl */ `
   // Si le canvas est plus haut que la vidéo → rogne gauche/droite.
   vec2 coverUv(vec2 uv) {
     vec2 scale = uCanvasAspect > uVideoAspect
-      ? vec2(1.0, uCanvasAspect / uVideoAspect)  // canvas plus large : rogne verticalement
-      : vec2(uVideoAspect / uCanvasAspect, 1.0); // canvas plus haut  : rogne horizontalement
-    return (uv - 0.5) / scale + 0.5;
+      ? vec2(1.0, uCanvasAspect / uVideoAspect)
+      : vec2(uVideoAspect / uCanvasAspect, 1.0);
+    return (uv - 0.5) / scale + 0.5 + vec2(0.0, uVideoOffsetY);
   }
 
   // Slot-mask : bandes phosphor R/G/B horizontales, rangées alternées.
@@ -225,6 +226,7 @@ export function HeroShader() {
         uVideoAspect: { value: 16 / 9 },
         uCell: { value: 2.5 },
         uMaskOpacity: { value: 0.0 },
+        uVideoOffsetY: { value: 0.08 },
       },
       depthTest: false,
       depthWrite: false,
@@ -271,25 +273,42 @@ export function HeroShader() {
     // root cause of the visible jump.
     let rvfcHandle = 0;
 
-    const onVideoFrame: VideoFrameCallback = () => {
+    const onVideoFrame: VideoFrameCallback = (_now, metadata) => {
       texture.needsUpdate = true;
-      // Re-register only while video is still playing; stops automatically at the last frame
-      if (!video.ended) {
-        rvfcHandle = video.requestVideoFrameCallback(onVideoFrame);
+
+      // Manual loop: seek to 0 near the end to avoid browser pre-buffering jump
+      if (video.duration > 0 && metadata.mediaTime >= video.duration - 0.1) {
+        video.currentTime = 0;
+        // Don't re-register here; the seeked listener will re-register
+        return;
       }
+
+      rvfcHandle = video.requestVideoFrameCallback(onVideoFrame);
     };
 
     // Fallback for browsers without requestVideoFrameCallback (Firefox, Safari <17)
     const useFallback = typeof video.requestVideoFrameCallback !== "function";
+    let fallbackLoopGuard = false;
 
     const onTimeUpdate = () => {
       texture.needsUpdate = true;
-      // No looping — just let the video stop at the last frame
+      if (!fallbackLoopGuard && video.duration > 0 && video.currentTime >= video.duration - 0.1) {
+        fallbackLoopGuard = true;
+        video.currentTime = 0;
+        video.play().finally(() => { fallbackLoopGuard = false; });
+      }
     };
 
     if (useFallback) {
       video.addEventListener("timeupdate", onTimeUpdate);
     }
+
+    // After a manual seek completes, resume frame callbacks
+    video.addEventListener("seeked", () => {
+      if (!useFallback && video.duration > 0) {
+        rvfcHandle = video.requestVideoFrameCallback(onVideoFrame);
+      }
+    });
 
     video.addEventListener("loadedmetadata", () => {
       // Mettre à jour le ratio réel de la vidéo

@@ -65,7 +65,7 @@ export function HeroSection() {
         </h1>
 
         {/* Subheadline */}
-        <p className="mt-16 max-w-xl text-base leading-relaxed text-white">
+        <p className="mt-24 max-w-xl text-base leading-relaxed text-white">
           On conçoit des sites clairs, rapides et efficaces pour les entreprises qui veulent être visibles et convertir en ligne.
         </p>
 
