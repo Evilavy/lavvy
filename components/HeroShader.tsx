@@ -226,7 +226,7 @@ export function HeroShader() {
         uVideoAspect: { value: 16 / 9 },
         uCell: { value: 2.5 },
         uMaskOpacity: { value: 0.0 },
-        uVideoOffsetY: { value: 0.08 },
+        uVideoOffsetY: { value: 0.10 },
       },
       depthTest: false,
       depthWrite: false,

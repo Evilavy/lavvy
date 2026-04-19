@@ -251,12 +251,12 @@ export const NavbarLogo = () => {
   return (
     <a
       href="#"
-      className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal"
+      className="relative z-20 mr-4 flex items-center space-x-2 py-1 text-sm font-normal"
     >
       <img
         src="./logo.png"
         alt="logo"
-        className="bg-zinc-100 rounded-md w-10 h-10 object-cover"
+        className="bg-zinc-100 rounded-full w-10 h-10 object-cover"
       />
       <span className={cn("font-medium transition-colors duration-200 font-bold", visible ? "text-black dark:text-white" : "text-white")}>Studio Lavvy</span>
     </a>
@@ -281,7 +281,7 @@ export const NavbarButton = ({
     | React.ComponentPropsWithoutRef<"button">
   )) => {
   const baseStyles =
-    "px-4 py-2 rounded-md bg-white button bg-white text-black text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
+    "px-4 py-2 rounded-full bg-white button bg-white text-black text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
 
   const variantStyles = {
     primary:

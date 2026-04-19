@@ -1,7 +1,10 @@
 "use client";
-import { Calendar } from "lucide-react";
+import { useState } from "react";
+import { Calendar, Sparkles, Video } from "lucide-react";
 import { HeroShader } from "@/components/HeroShader";
+
 export function HeroSection() {
+  const [shaderEnabled, setShaderEnabled] = useState(true);
   const tags = ["Strategy", "UX/UI Design", "Development", "SEO & Support"];
 
   return (
@@ -17,10 +20,49 @@ export function HeroSection() {
         }}
       />
 
-      {/* Desktop shader background */}
+      {/* Desktop : vidéo avec shader CRT ou brute */}
       <div className="absolute inset-0 z-0 hidden lg:block">
-        <HeroShader />
+        {shaderEnabled ? (
+          <HeroShader />
+        ) : (
+          <div className="absolute inset-0 overflow-hidden">
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ transform: "scale(1.2) translateY(8%)" }}
+              src="/max.webm"
+              autoPlay
+              muted
+              playsInline
+              loop
+              preload="auto"
+            />
+          </div>
+        )}
       </div>
+
+      <button
+        type="button"
+        onClick={() => setShaderEnabled((v) => !v)}
+        className="pointer-events-auto fixed top-24 right-5 z-30 hidden lg:inline-flex items-center gap-2 rounded-full border border-white/40 bg-black/45 px-4 py-2 text-sm text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+        aria-pressed={shaderEnabled}
+        aria-label={
+          shaderEnabled
+            ? "Désactiver l'effet sur la vidéo de fond"
+            : "Activer l'effet sur la vidéo de fond"
+        }
+      >
+        {shaderEnabled ? (
+          <>
+            <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
+            Effet CRT
+          </>
+        ) : (
+          <>
+            <Video className="h-4 w-4 shrink-0" aria-hidden />
+            Vidéo brute
+          </>
+        )}
+      </button>
 
       {/* Tags — mobile only, collés en haut */}
       <div className="relative z-20 flex lg:hidden flex-wrap justify-center gap-3 px-4 pt-28 pointer-events-none">
@@ -65,7 +107,7 @@ export function HeroSection() {
         </h1>
 
         {/* Subheadline */}
-        <p className="mt-24 max-w-xl text-base leading-relaxed text-white">
+        <p className="mt-16 lg:mt-30 max-w-xl text-base leading-relaxed text-white">
           On conçoit des sites clairs, rapides et efficaces pour les entreprises qui veulent être visibles et convertir en ligne.
         </p>
 
