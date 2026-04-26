@@ -6,30 +6,16 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center overflow-hidden bg-black">
-      {/* Mobile background image */}
+      {/* Background image */}
       <div
-        className="absolute inset-0 z-0 block lg:hidden"
+        className="absolute inset-0 z-0"
         style={{
-          backgroundImage: "url('/mobile.png')",
+          backgroundImage: "url('/bg-hero.png')",
           backgroundSize: "cover",
-          backgroundPosition: "center calc(50% - 50px)",
+          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       />
-
-      {/* Desktop video background */}
-      <div className="absolute inset-0 z-0 hidden lg:block overflow-hidden">
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ transform: "scale(1.2) translateY(8%)" }}
-          src="/max.webm"
-          autoPlay
-          muted
-          playsInline
-          loop
-          preload="auto"
-        />
-      </div>
 
       {/* Tags — mobile only, collés en haut */}
       <div className="relative z-20 flex lg:hidden flex-wrap justify-center gap-3 px-4 pt-28 pointer-events-none">
@@ -44,7 +30,7 @@ export function HeroSection() {
       </div>
 
       {/* Main content — centré desktop, poussé en bas mobile */}
-      <div className="relative z-20 flex flex-col items-center text-center px-4 pb-16 mt-auto lg:mt-0 lg:py-28 pointer-events-none">
+      <div className="relative z-20 flex flex-col items-center text-center px-4 pb-16 mt-auto mb-16 lg:mb-0 lg:mt-0 lg:py-28 pointer-events-none">
         {/* Tags — desktop only */}
         <div className="hidden lg:flex flex-wrap justify-center gap-3 mb-12">
           {tags.map((tag) => (
@@ -74,12 +60,12 @@ export function HeroSection() {
         </h1>
 
         {/* Subheadline */}
-        <p className="mt-16 lg:mt-30 max-w-xl text-base leading-relaxed text-white">
+        <p className="mt-16 lg:mt-36 max-w-xl text-base leading-relaxed text-white">
           On conçoit des sites clairs, rapides et efficaces pour les entreprises qui veulent être visibles et convertir en ligne.
         </p>
 
         {/* CTA */}
-        <div className="mt-10 flex items-end gap-3">
+        <div className="mt-6 flex items-end gap-3">
           <div className="relative flex flex-col items-start">
             <button className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-white px-7 py-4 text-base font-semibold text-brand-dark shadow-lg transition-transform hover:scale-[1.02]">
               <Calendar className="w-5 h-5" />

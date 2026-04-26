@@ -1,6 +1,7 @@
+"use client";
+
+import { useRef, useEffect } from "react";
 import { Lightbulb, Smartphone, Code, HeadphonesIcon } from "lucide-react";
-import Image from "next/image";
-import constructionImage from "@/assets/construction.png";
 
 const services = [
   {
@@ -37,19 +38,51 @@ const awards = [
 ];
 
 export function ServicesSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Set initial time
+    video.currentTime = 1.5;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch((err) => console.log("Video play error:", err));
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <section className="relative z-10 px-4 pb-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         {/* Left column — dark card with headline + awards */}
         <div className="relative min-h-[600px] overflow-hidden rounded-3xl bg-card">
-          <Image
-            src={constructionImage}
-            alt="Strategy"
-            fill
-            className="object-cover"
-            sizes="(min-width: 1024px) 33vw, 100vw"
-            priority
-          />
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover"
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label="Stratégie"
+          >
+            <source src="/max.webm" type="video/webm" />
+          </video>
         </div>
 
         {/* Right columns — 2x2 service cards */}
